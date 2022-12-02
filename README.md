@@ -2,7 +2,7 @@
 
 -->
 
-# BPBReID
+# BPBReID - Body Part-based Re-Identification
 **A strong baseline for body part-based person re-identification**
 
 [![arXiv](https://img.shields.io/badge/arXiv-2211.03679-<COLOR>.svg)](https://arxiv.org/abs/2211.03679) [![License: MIT](https://img.shields.io/badge/License-Apache-yellow.svg)](https://opensource.org/licenses/MIT) ![test](https://img.shields.io/static/v1?label=By&message=Pytorch&color=red)

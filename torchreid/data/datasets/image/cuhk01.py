@@ -24,6 +24,7 @@ class CUHK01(ImageDataset):
     """
     dataset_dir = 'cuhk01'
     dataset_url = None
+    eval_metric = 'default'
 
     def __init__(self, root='', split_id=0, **kwargs):
         self.root = osp.abspath(osp.expanduser(root))

@@ -48,8 +48,7 @@ class ImageSoftmaxEngine(Engine):
         )
         engine.run(
             max_epoch=60,
-            save_dir='log/resnet50-softmax-market1501',
-            print_freq=10
+            save_dir='log/resnet50-softmax-market1501'
         )
     """
 
@@ -58,11 +57,14 @@ class ImageSoftmaxEngine(Engine):
         datamanager,
         model,
         optimizer,
+        writer,
+        engine_state,
         scheduler=None,
         use_gpu=True,
-        label_smooth=True
+        label_smooth=True,
+        save_model_flag=False
     ):
-        super(ImageSoftmaxEngine, self).__init__(datamanager, use_gpu)
+        super(ImageSoftmaxEngine, self).__init__(datamanager, writer, engine_state, use_gpu, save_model_flag)
 
         self.model = model
         self.optimizer = optimizer
@@ -70,8 +72,6 @@ class ImageSoftmaxEngine(Engine):
         self.register_model('model', model, optimizer, scheduler)
 
         self.criterion = CrossEntropyLoss(
-            num_classes=self.datamanager.num_train_pids,
-            use_gpu=self.use_gpu,
             label_smooth=label_smooth
         )
 
@@ -94,4 +94,4 @@ class ImageSoftmaxEngine(Engine):
             'acc': metrics.accuracy(outputs, pids)[0].item()
         }
 
-        return loss_summary
+        return loss, {'glb_ft': loss_summary}

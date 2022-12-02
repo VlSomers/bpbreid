@@ -65,6 +65,6 @@ class SenseReID(ImageDataset):
             img_name = osp.splitext(osp.basename(img_path))[0]
             pid, camid = img_name.split('_')
             pid, camid = int(pid), int(camid)
-            data.append((img_path, pid, camid))
+            data.append({'img_path': img_path, 'pid': pid, 'camid': camid})
 
         return data

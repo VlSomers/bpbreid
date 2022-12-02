@@ -13,7 +13,7 @@ develop-eggs/
 dist/
 downloads/
 eggs/
-.eggs/
+.eggs/f
 lib/
 lib64/
 parts/
@@ -137,4 +137,7 @@ reid-data/
 log/
 saved-models/
 model-zoo/
+pretrained_models/
 debug*
+/.idea/
+/configs_user/

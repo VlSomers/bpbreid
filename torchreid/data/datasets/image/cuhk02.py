@@ -24,6 +24,7 @@ class CUHK02(ImageDataset):
     dataset_dir = 'cuhk02'
     cam_pairs = ['P1', 'P2', 'P3', 'P4', 'P5']
     test_cam_pair = 'P5'
+    eval_metric = 'default'
 
     def __init__(self, root='', **kwargs):
         self.root = osp.abspath(osp.expanduser(root))

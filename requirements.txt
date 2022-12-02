@@ -1,3 +1,6 @@
+# pip install -r requirements.txt
+
+# base torchreid ----------------------------------------
 numpy
 Cython
 h5py
@@ -13,3 +16,14 @@ gdown
 flake8
 yapf
 isort
+
+# added for bpbreid
+albumentations
+pandas
+tabulate
+deepdiff
+wandb
+neptune-client
+clearml
+monai
+torchmetrics

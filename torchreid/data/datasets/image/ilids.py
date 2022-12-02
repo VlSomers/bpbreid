@@ -123,7 +123,7 @@ class iLIDS(ImageDataset):
                 pid = pid2label[pid]
             camid = int(img_name[4:7]) - 1 # 0-based
             img_path = osp.join(self.data_dir, img_name)
-            data.append((img_path, pid, camid))
+            data.append({'img_path': img_path, 'pid': pid, 'camid': camid})
 
         return data
 

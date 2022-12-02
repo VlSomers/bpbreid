@@ -1,0 +1,48 @@
+data:
+  root: '~/datasets/reid'
+  sources: ['market1501']
+  targets: ['market1501', 'occluded_reid']
+  height: 384
+  width: 128
+  transforms: ['rc', 're', 'rf', 'cj']
+
+model:
+  name: 'bpbreid'
+  bpbreid:
+    mask_filtering_training: False
+    mask_filtering_testing: True
+    learnable_attention_enabled: True
+    backbone: 'hrnet32'
+    test_embeddings: ['bn_foreg', 'parts']
+    masks:
+      dir: 'pifpaf_maskrcnn_filtering'
+      preprocess: 'eight'
+
+loss:
+  name: 'part_based'
+  part_based:
+    name: 'part_averaged_triplet_loss'
+    ppl: 'cl'
+    weights:  # SOTA weights for GiLt loss
+      globl:
+        id: 1.
+        tr: 0.
+      foreg:
+        id: 1.
+        tr: 1.
+      conct:
+        id: 1.
+        tr: 0.
+      parts:
+        id: 0.
+        tr: 1.
+      pixls:
+        ce: 0.7
+
+train:
+  batch_size: 64
+
+test:
+  evaluate: False
+  batch_size: 64
+  visrank: True

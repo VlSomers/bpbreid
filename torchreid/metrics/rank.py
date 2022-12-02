@@ -85,10 +85,13 @@ def eval_cuhk03(distmat, q_pids, g_pids, q_camids, g_camids, max_rank):
     assert num_valid_q > 0, 'Error: all query identities do not appear in gallery'
 
     all_cmc = np.asarray(all_cmc).astype(np.float32)
-    all_cmc = all_cmc.sum(0) / num_valid_q
+    cmc = all_cmc.sum(0) / num_valid_q
     mAP = np.mean(all_AP)
 
-    return all_cmc, mAP
+    return {
+        'cmc': cmc,
+        'mAP': mAP,
+    }
 
 
 def eval_market1501(distmat, q_pids, g_pids, q_camids, g_camids, max_rank):
@@ -147,23 +150,24 @@ def eval_market1501(distmat, q_pids, g_pids, q_camids, g_camids, max_rank):
     assert num_valid_q > 0, 'Error: all query identities do not appear in gallery'
 
     all_cmc = np.asarray(all_cmc).astype(np.float32)
-    all_cmc = all_cmc.sum(0) / num_valid_q
+    cmc = all_cmc.sum(0) / num_valid_q
     mAP = np.mean(all_AP)
 
-    return all_cmc, mAP
+    return {
+        'cmc': cmc,
+        'mAP': mAP,
+    }
 
 
 def evaluate_py(
-    distmat, q_pids, g_pids, q_camids, g_camids, max_rank, use_metric_cuhk03
+    distmat, q_pids, g_pids, q_camids, g_camids, max_rank, eval_metric, q_anns=None, g_anns=None,
 ):
-    if use_metric_cuhk03:
-        return eval_cuhk03(
-            distmat, q_pids, g_pids, q_camids, g_camids, max_rank
-        )
+    if eval_metric == 'default':
+        return eval_market1501(distmat, q_pids, g_pids, q_camids, g_camids, max_rank)
+    elif eval_metric == 'cuhk03':
+        return eval_cuhk03(distmat, q_pids, g_pids, q_camids, g_camids, max_rank)
     else:
-        return eval_market1501(
-            distmat, q_pids, g_pids, q_camids, g_camids, max_rank
-        )
+        raise ValueError("Incorrect eval_metric value '{}'".format(eval_metric))
 
 
 def evaluate_rank(
@@ -173,7 +177,9 @@ def evaluate_rank(
     q_camids,
     g_camids,
     max_rank=50,
-    use_metric_cuhk03=False,
+    eval_metric='default',
+    q_anns=None,
+    g_anns=None,
     use_cython=True
 ):
     """Evaluates CMC rank.
@@ -189,19 +195,20 @@ def evaluate_rank(
         g_camids (numpy.ndarray): 1-D array containing camera views under
             which each gallery instance is captured.
         max_rank (int, optional): maximum CMC rank to be computed. Default is 50.
-        use_metric_cuhk03 (bool, optional): use single-gallery-shot setting for cuhk03.
-            Default is False. This should be enabled when using cuhk03 classic split.
+        eval_metric (str, optional): use multi-gallery-shot setting with 'default', single-gallery-shot
+            setting with 'cuhk03' or action-to-replay setting with 'soccernetv3'.
+            Default is 'default'.
         use_cython (bool, optional): use cython code for evaluation. Default is True.
             This is highly recommended as the cython code can speed up the cmc computation
             by more than 10x. This requires Cython to be installed.
     """
-    if use_cython and IS_CYTHON_AVAI:
-        return evaluate_cy(
+    if use_cython and IS_CYTHON_AVAI and (eval_metric == 'default' or eval_metric == 'cuhk03'):
+        return evaluate_py(
             distmat, q_pids, g_pids, q_camids, g_camids, max_rank,
-            use_metric_cuhk03
+            eval_metric
         )
     else:
         return evaluate_py(
             distmat, q_pids, g_pids, q_camids, g_camids, max_rank,
-            use_metric_cuhk03
+            eval_metric, q_anns=q_anns, g_anns=g_anns
         )

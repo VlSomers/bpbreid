@@ -388,8 +388,8 @@ class HACNN(nn.Module):
         if not self.training:
             # l2 normalization before concatenation
             if self.learn_region:
-                x_global = x_global / x_global.norm(p=2, dim=1, keepdim=True)
-                x_local = x_local / x_local.norm(p=2, dim=1, keepdim=True)
+                x_global = x_global / x_global.normalization(p=2, dim=1, keepdim=True)
+                x_local = x_local / x_local.normalization(p=2, dim=1, keepdim=True)
                 return torch.cat([x_global, x_local], 1)
             else:
                 return x_global

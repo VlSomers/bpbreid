@@ -1,0 +1,48 @@
+data:
+  root: '~/datasets/reid'
+  sources: ['market1501']
+  targets: ['market1501']
+  height: 384
+  width: 128
+  transforms: ['rc', 'rf', 're']
+
+model:
+  name: 'bpbreid'
+  bpbreid:
+    mask_filtering_training: False
+    mask_filtering_testing: False  # no visibility scores used at training for PCB
+    learnable_attention_enabled: True
+    backbone: 'hrnet32'
+    test_embeddings: ['conct']  # the holistic concatenated embedding alone is used to compute query-gallery distances
+    masks:
+      type: 'stripes'  # PCB uses horizontal stripes
+      parts_num: 6  # we use 6 horizontal stripes here
+
+loss:
+  name: 'part_based'
+  part_based:
+    name: 'part_averaged_triplet_loss'
+    ppl: 'cl'
+    weights:
+      globl:
+        id: 0.
+        tr: 0.
+      foreg:
+        id: 0.
+        tr: 0.
+      conct:
+        id: 0.
+        tr: 0.
+      parts:
+        id: 1.  # For PCB, we use the cross-entropy (identity) loss on each of the 6 horizontal stripes
+        tr: 0.
+      pixls:
+        ce: 0.  # no body part prediction loss for PCB
+
+train:
+  batch_size: 64
+
+test:
+  evaluate: False
+  batch_size: 64
+  visrank: True

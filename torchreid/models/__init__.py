@@ -1,10 +1,13 @@
 from __future__ import absolute_import
-import torch
-
+from .hrnet import hrnet32
 from .pcb import *
 from .mlfn import *
 from .hacnn import *
 from .osnet import *
+from .pvpm import pose_resnet50_256_p4, pose_resnet50_256_p6, pose_resnet50_256_p6_pscore_reg, \
+    pose_resnet50_256_p4_pscore_reg
+from .resnet_fastreid import build_resnet_backbone, fastreid_resnet, fastreid_resnet_ibn, fastreid_resnet_nl, \
+    fastreid_resnet_ibn_nl
 from .senet import *
 from .mudeep import *
 from .nasnet import *
@@ -21,6 +24,7 @@ from .resnet_ibn_a import *
 from .resnet_ibn_b import *
 from .shufflenetv2 import *
 from .inceptionresnetv2 import *
+from .bpbreid import *
 
 __model_factory = {
     # image classification models
@@ -71,7 +75,17 @@ __model_factory = {
     'osnet_x0_5': osnet_x0_5,
     'osnet_x0_25': osnet_x0_25,
     'osnet_ibn_x1_0': osnet_ibn_x1_0,
-    'osnet_ain_x1_0': osnet_ain_x1_0
+    'osnet_ain_x1_0': osnet_ain_x1_0,
+    'pose_p4': pose_resnet50_256_p4,
+    'pose_p6': pose_resnet50_256_p6,
+    'pose_p6s': pose_resnet50_256_p6_pscore_reg,
+    'pose_p4s': pose_resnet50_256_p4_pscore_reg,
+    'hrnet32': hrnet32,
+    'bpbreid': bpbreid,
+    'fastreid_resnet': fastreid_resnet,
+    'fastreid_resnet_ibn': fastreid_resnet_ibn,
+    'fastreid_resnet_nl': fastreid_resnet_nl,
+    'fastreid_resnet_ibn_nl': fastreid_resnet_ibn_nl,
 }
 
 
@@ -86,7 +100,7 @@ def show_avai_models():
 
 
 def build_model(
-    name, num_classes, loss='softmax', pretrained=True, use_gpu=True
+    name, num_classes, loss='softmax', pretrained=True, use_gpu=True, **kwargs
 ):
     """A function wrapper for building a model.
 
@@ -115,5 +129,6 @@ def build_model(
         num_classes=num_classes,
         loss=loss,
         pretrained=pretrained,
-        use_gpu=use_gpu
+        use_gpu=use_gpu,
+        **kwargs
     )

@@ -340,23 +340,28 @@ class ResNet(nn.Module):
                     nn.init.constant_(m.bias, 0)
 
     def featuremaps(self, x):
-        x = self.conv1(x)
-        x = self.bn1(x)
-        x = self.relu(x)
-        x = self.maxpool(x)
-        x = self.layer1(x)
-        x = self.layer2(x)
-        x = self.layer3(x)
-        x = self.layer4(x)
+        # x torch.Size([1, 3, 256, 128])
+        x = self.conv1(x) # torch.Size([1, 64, 128, 64])
+        x = self.bn1(x) # torch.Size([1, 64, 128, 64])
+        x = self.relu(x) # torch.Size([1, 64, 128, 64])
+        x = self.maxpool(x) # torch.Size([1, 64, 64, 32])
+        x = self.layer1(x) # torch.Size([1, 256, 64, 32]) - 3 blocks
+        x = self.layer2(x) # torch.Size([1, 512, 32, 16]) - 4 blocks
+        x = self.layer3(x) # torch.Size([1, 1024, 16, 8]) - 6 blocks
+        x = self.layer4(x) # torch.Size([1, 2048, 8, 4]) - 3 blocks
         return x
 
     def forward(self, x):
-        f = self.featuremaps(x)
-        v = self.global_avgpool(f)
-        v = v.view(v.size(0), -1)
+        f = self.featuremaps(x) # torch.Size([1, 2048, 8, 4])
+
+        if self.loss == 'part_based':
+            return f
+
+        v = self.global_avgpool(f) # torch.Size([1, 2048, 1, 1])
+        v = v.view(v.size(0), -1) # torch.Size([1, 2048])
 
         if self.fc is not None:
-            v = self.fc(v)
+            v = self.fc(v) # torch.Size([1, 512])
 
         if not self.training:
             return v
@@ -428,7 +433,6 @@ def resnet50(num_classes, loss='softmax', pretrained=True, **kwargs):
         loss=loss,
         block=Bottleneck,
         layers=[3, 4, 6, 3],
-        last_stride=2,
         fc_dims=None,
         dropout_p=None,
         **kwargs

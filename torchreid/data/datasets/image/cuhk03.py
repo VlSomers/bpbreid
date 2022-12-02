@@ -22,6 +22,7 @@ class CUHK03(ImageDataset):
     """
     dataset_dir = 'cuhk03'
     dataset_url = None
+    eval_metric = 'default'
 
     def __init__(
         self,

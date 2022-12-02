@@ -11,3 +11,9 @@ from .msmt17 import MSMT17
 from .sensereid import SenseReID
 from .market1501 import Market1501
 from .dukemtmcreid import DukeMTMCreID
+from .occluded_dukemtmc import OccludedDuke
+from .occluded_reid import OccludedReID
+from .partial_reid import Partial_REID
+from .partial_ilids import Partial_iLIDS
+from .p_ETHZ import P_ETHZ
+from .p_dukemtmc_reid import PDukemtmcReid

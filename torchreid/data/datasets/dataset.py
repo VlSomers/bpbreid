@@ -1,12 +1,14 @@
 from __future__ import division, print_function, absolute_import
 import copy
+import os
+
 import numpy as np
 import os.path as osp
 import tarfile
 import zipfile
 import torch
 
-from torchreid.utils import read_image, download_url, mkdir_if_missing
+from torchreid.utils import read_masks, read_image, download_url, mkdir_if_missing
 
 
 class Dataset(object):
@@ -27,24 +29,51 @@ class Dataset(object):
     _junk_pids = [
     ] # contains useless person IDs, e.g. background, false detections
 
+    masks_base_dir = None
+    eval_metric = 'default'  # default to market101
+
+    def gallery_filter(self, q_pid, q_camid, q_ann, g_pids, g_camids, g_anns):
+        """ Remove gallery samples that have the same pid and camid as the query sample, since ReID is a cross-camera
+        person retrieval task for most datasets. However, we still keep samples from the same camera but of different
+        identity as distractors."""
+        remove = (g_camids == q_camid) & (g_pids == q_pid)
+        return remove
+
+    def infer_masks_path(self, img_path):
+        masks_path = os.path.join(self.dataset_dir, self.masks_base_dir, self.masks_dir, os.path.basename(os.path.dirname(img_path)), os.path.splitext(os.path.basename(img_path))[0] + self.masks_suffix)
+        return masks_path
+
     def __init__(
         self,
         train,
         query,
         gallery,
-        transform=None,
+        config=None,
+        transform_tr=None,
+        transform_te=None,
         mode='train',
         combineall=False,
         verbose=True,
+        use_masks=False,
+        masks_dir=None,
+        masks_base_dir=None,
+        load_masks=False,
         **kwargs
     ):
         self.train = train
         self.query = query
         self.gallery = gallery
-        self.transform = transform
+        self.transform_tr = transform_tr
+        self.transform_te = transform_te
+        self.cfg = config
         self.mode = mode
         self.combineall = combineall
         self.verbose = verbose
+        self.use_masks = use_masks
+        self.masks_dir = masks_dir
+        self.load_masks = load_masks
+        if masks_base_dir is not None:
+            self.masks_base_dir = masks_base_dir
 
         self.num_train_pids = self.get_num_pids(self.train)
         self.num_train_cams = self.get_num_cams(self.train)
@@ -52,35 +81,56 @@ class Dataset(object):
         if self.combineall:
             self.combine_all()
 
-        if self.mode == 'train':
-            self.data = self.train
-        elif self.mode == 'query':
-            self.data = self.query
-        elif self.mode == 'gallery':
-            self.data = self.gallery
-        else:
-            raise ValueError(
-                'Invalid mode. Got {}, but expected to be '
-                'one of [train | query | gallery]'.format(self.mode)
-            )
-
         if self.verbose:
             self.show_summary()
+
+    def transforms(self, mode):
+        """Returns the transforms of a specific mode."""
+        if mode == 'train':
+            return self.transform_tr
+        elif mode == 'query':
+            return self.transform_te
+        elif mode == 'gallery':
+            return self.transform_te
+        else:
+            raise ValueError("Invalid mode. Got {}, but expected to be "
+                             "'train', 'query' or 'gallery'".format(mode))
+
+    def data(self, mode):
+        """Returns the data of a specific mode.
+
+        Args:
+            mode (str): 'train', 'query' or 'gallery'.
+
+        Returns:
+            list: contains tuples of (img_path(s), pid, camid).
+        """
+        if mode == 'train':
+            return self.train
+        elif mode == 'query':
+            return self.query
+        elif mode == 'gallery':
+            return self.gallery
+        else:
+            raise ValueError("Invalid mode. Got {}, but expected to be "
+                             "'train', 'query' or 'gallery'".format(mode))
 
     def __getitem__(self, index):
         raise NotImplementedError
 
-    def __len__(self):
-        return len(self.data)
+    def __len__(self):  # kept for backward compatibility
+        return self.len(self.mode)
+
+    def len(self, mode):
+        return len(self.data(mode))
 
     def __add__(self, other):
         """Adds two datasets together (only the train set)."""
         train = copy.deepcopy(self.train)
 
-        for img_path, pid, camid in other.train:
-            pid += self.num_train_pids
-            camid += self.num_train_cams
-            train.append((img_path, pid, camid))
+        for sample in other.train:
+            sample['pid'] += self.num_train_pids
+            train.append(sample)
 
         ###################################
         # Things to do beforehand:
@@ -89,7 +139,12 @@ class Dataset(object):
         #    if it was True for a specific dataset, setting it to True will
         #    create new IDs that should have been included
         ###################################
-        if isinstance(train[0][0], str):
+
+
+        # FIXME find better implementation for combining datasets and masks
+        assert self.use_masks == other.use_masks
+
+        if isinstance(self, ImageDataset):
             return ImageDataset(
                 train,
                 self.query,
@@ -97,7 +152,9 @@ class Dataset(object):
                 transform=self.transform,
                 mode=self.mode,
                 combineall=False,
-                verbose=False
+                verbose=False,
+                use_masks=self.use_masks,
+                masks_base_dir=self.masks_base_dir,
             )
         else:
             return VideoDataset(
@@ -128,9 +185,9 @@ class Dataset(object):
         """
         pids = set()
         cams = set()
-        for _, pid, camid in data:
-            pids.add(pid)
-            cams.add(camid)
+        for i, sample in enumerate(data):
+            pids.add(sample['pid'])
+            cams.add(sample['camid'])
         return len(pids), len(cams)
 
     def get_num_pids(self, data):
@@ -151,18 +208,20 @@ class Dataset(object):
 
         # relabel pids in gallery (query shares the same scope)
         g_pids = set()
-        for _, pid, _ in self.gallery:
+        for sample in self.gallery:
+            pid = sample['pid']
             if pid in self._junk_pids:
                 continue
             g_pids.add(pid)
         pid2label = {pid: i for i, pid in enumerate(g_pids)}
 
         def _combine_data(data):
-            for img_path, pid, camid in data:
+            for sample in data:
+                pid = sample['pid']
                 if pid in self._junk_pids:
                     continue
-                pid = pid2label[pid] + self.num_train_pids
-                combined.append((img_path, pid, camid))
+                sample['pid'] = pid2label[pid] + self.num_train_pids
+                combined.append(sample)
 
         _combine_data(self.query)
         _combine_data(self.gallery)
@@ -260,12 +319,27 @@ class ImageDataset(Dataset):
     def __init__(self, train, query, gallery, **kwargs):
         super(ImageDataset, self).__init__(train, query, gallery, **kwargs)
 
-    def __getitem__(self, index):
-        img_path, pid, camid = self.data[index]
-        img = read_image(img_path)
-        if self.transform is not None:
-            img = self.transform(img)
-        return img, pid, camid, img_path
+    def __getitem__(self, index):  # kept for backward compatibility
+        return self.getitem(index, self.mode)
+
+    def getitem(self, index, mode):
+        # BPBreID can work with None masks
+        # list all combination: source vs target, merged/joined vs not, cross domain or not, load from disk vs fixed for BoT/PBP transform vs None,
+        # need masks when available for pixel accuracy prediction
+        sample = self.data(mode)[index]
+        transf_args = {"image": read_image(sample['img_path'])}
+        if self.use_masks:
+            if self.load_masks and 'masks_path' in sample:
+                transf_args["mask"] = read_masks(sample['masks_path'])
+            elif not self.load_masks:
+                # hack for BoT and PCB masks that are generated in transform().
+                # FIXME BoT and PCB masks should not be generated here, but later in BPBreID model with a config
+                transf_args["mask"] = np.ones((1, 2, 2))
+            else:
+                pass
+        result = self.transforms(mode)(**transf_args)
+        sample.update(result)
+        return sample
 
     def show_summary(self):
         num_train_pids, num_train_cams = self.parse_data(self.train)
@@ -321,8 +395,8 @@ class VideoDataset(Dataset):
         if self.transform is None:
             raise RuntimeError('transform must not be None')
 
-    def __getitem__(self, index):
-        img_paths, pid, camid = self.data[index]
+    def getitem(self, index, mode):
+        img_paths, pid, camid = self.data(mode)[index]  # FIXME new format
         num_imgs = len(img_paths)
 
         if self.sample_method == 'random':

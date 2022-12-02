@@ -4,9 +4,8 @@ from setuptools import setup, find_packages
 from distutils.extension import Extension
 from Cython.Build import cythonize
 
-
 def readme():
-    with open('README.rst') as f:
+    with open('README.md') as f:
         content = f.read()
     return content
 

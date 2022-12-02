@@ -185,7 +185,6 @@ For example, say you want to pretrain the classification layer named "classifier
         save_dir='log/resnet50',
         max_epoch=60,
         eval_freq=10,
-        print_freq=10,
         test_only=False,
         fixbase_epoch=5,
         open_layers='classifier'

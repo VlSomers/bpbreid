@@ -3,7 +3,8 @@ import numpy as np
 import shutil
 import os.path as osp
 import cv2
-
+from torchreid.utils import Logger
+from .engine_state import EngineState
 from .tools import mkdir_if_missing
 
 __all__ = ['visualize_ranked_results']
@@ -76,7 +77,7 @@ def visualize_ranked_results(
             shutil.copy(src, dst)
 
     for q_idx in range(num_q):
-        qimg_path, qpid, qcamid = query[q_idx]
+        qpid, qcamid, qimg_path = query[q_idx]['pid'], query[q_idx]['camid'], query[q_idx]['img_path']
         qimg_path_name = qimg_path[0] if isinstance(
             qimg_path, (tuple, list)
         ) else qimg_path
@@ -107,7 +108,7 @@ def visualize_ranked_results(
 
         rank_idx = 1
         for g_idx in indices[q_idx, :]:
-            gimg_path, gpid, gcamid = gallery[g_idx]
+            gpid, gcamid, gimg_path = gallery[g_idx]['pid'], gallery[g_idx]['camid'], gallery[g_idx]['img_path']
             invalid = (qpid == gpid) & (qcamid == gcamid)
 
             if not invalid:
@@ -146,7 +147,9 @@ def visualize_ranked_results(
 
         if data_type == 'image':
             imname = osp.basename(osp.splitext(qimg_path_name)[0])
-            cv2.imwrite(osp.join(save_dir, imname + '.jpg'), grid_img)
+            # cv2.imwrite(osp.join(save_dir, imname + '.jpg'), grid_img)
+            Logger.current_logger().add_image("Ranking grid", imname + '.jpg', cv2.cvtColor(grid_img, cv2.COLOR_BGR2RGB),
+                                              EngineState.current_engine_state().epoch)
 
         if (q_idx+1) % 100 == 0:
             print('- done {}/{}'.format(q_idx + 1, num_q))

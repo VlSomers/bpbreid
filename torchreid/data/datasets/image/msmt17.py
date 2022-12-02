@@ -38,7 +38,23 @@ class MSMT17(ImageDataset):
     dataset_dir = 'msmt17'
     dataset_url = None
 
-    def __init__(self, root='', **kwargs):
+    masks_dirs = {
+        # dir_name: (masks_stack_size, contains_background_mask)
+    }
+
+    @staticmethod
+    def get_masks_config(masks_dir):
+        if masks_dir not in MSMT17.masks_dirs:
+            return None
+        else:
+            return MSMT17.masks_dirs[masks_dir]
+
+    def __init__(self, root='', masks_dir=None, **kwargs):
+        self.masks_dir = masks_dir
+        if self.masks_dir in self.masks_dirs:
+            self.masks_parts_numbers, self.has_background, self.masks_suffix = self.masks_dirs[self.masks_dir]
+        else:
+            self.masks_parts_numbers, self.has_background, self.masks_suffix = None, None, None
         self.root = osp.abspath(osp.expanduser(root))
         self.dataset_dir = osp.join(self.root, self.dataset_dir)
         self.download_dataset(self.dataset_dir, self.dataset_url)
@@ -93,6 +109,10 @@ class MSMT17(ImageDataset):
             pid = int(pid) # no need to relabel
             camid = int(img_path.split('_')[2]) - 1 # index starts from 0
             img_path = osp.join(dir_path, img_path)
-            data.append((img_path, pid, camid))
+            masks_path = self.infer_masks_path(img_path)
+            data.append({'img_path': img_path,
+                         'pid': pid,
+                         'masks_path': masks_path,
+                         'camid': camid})
 
         return data

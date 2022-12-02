@@ -1,0 +1,26 @@
+data:
+  root: '~/datasets/reid'
+  sources: ['occluded_duke']
+  targets: ['occluded_duke']
+  height: 384
+  width: 128
+  transforms: ['rc', 're']
+
+model:
+  name: 'bpbreid'
+  load_weights: 'pretrained_models/bpbreid_occluded_duke_hrnet32_10670.pth'
+  load_config: True
+  bpbreid:
+    mask_filtering_training: False
+    mask_filtering_testing: True
+    learnable_attention_enabled: True
+    backbone: 'hrnet32'
+    test_embeddings: ['bn_foreg', 'parts']
+    masks:
+      dir: 'pifpaf_maskrcnn_filtering'
+      preprocess: 'five_v'
+
+test:
+  evaluate: True
+  batch_size: 64
+  visrank: True

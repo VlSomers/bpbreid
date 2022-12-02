@@ -4,6 +4,7 @@ import sys
 import json
 import time
 import errno
+import cv2
 import numpy as np
 import random
 import os.path as osp
@@ -14,7 +15,7 @@ from PIL import Image
 
 __all__ = [
     'mkdir_if_missing', 'check_isfile', 'read_json', 'write_json',
-    'set_random_seed', 'download_url', 'read_image', 'collect_env_info'
+    'set_random_seed', 'download_url', 'read_image', 'read_masks', 'collect_env_info', 'perc'
 ]
 
 
@@ -108,7 +109,8 @@ def read_image(path):
         raise IOError('"{}" does not exist'.format(path))
     while not got_img:
         try:
-            img = Image.open(path).convert('RGB')
+            img = cv2.imread(path)
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             got_img = True
         except IOError:
             print(
@@ -116,6 +118,32 @@ def read_image(path):
                 .format(path)
             )
     return img
+
+
+def read_masks(masks_path):
+    """Reads part-based masks information from path.
+
+    Args:
+        path (str): path to an image. Part-based masks information is stored in a .npy file with image name as prefix
+
+    Returns:
+        Numpy array of size N x H x W where N is the number of part-based masks
+    """
+
+    got_masks = False
+    if not osp.exists(masks_path):
+        raise IOError('Masks file"{}" does not exist'.format(masks_path))
+    while not got_masks:
+        try:
+            masks = np.load(masks_path)
+            masks = np.transpose(masks, (1, 2, 0))
+            got_masks = True
+        except IOError:
+            print(
+                'IOError incurred when reading "{}". Will redo. Don\'t worry. Just chill.'
+                .format(masks_path)
+            )
+    return masks
 
 
 def collect_env_info():
@@ -127,3 +155,7 @@ def collect_env_info():
     env_str = get_pretty_env_info()
     env_str += '\n        Pillow ({})'.format(PIL.__version__)
     return env_str
+
+
+def perc(val, decimals=2):
+    return np.around(val*100, decimals)

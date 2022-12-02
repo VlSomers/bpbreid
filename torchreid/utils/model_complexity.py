@@ -6,6 +6,9 @@ from collections import namedtuple, defaultdict
 import torch
 
 __all__ = ['compute_model_complexity']
+
+from torchreid.models.bpbreid import BPBreID
+
 """
 Utility
 """
@@ -259,7 +262,7 @@ def _get_flops_counter(only_conv_linear):
 
 
 def compute_model_complexity(
-    model, input_size, verbose=False, only_conv_linear=True
+    model, cfg, verbose=False, only_conv_linear=True
 ):
     """Returns number of parameters and FLOPs.
 
@@ -273,7 +276,6 @@ def compute_model_complexity(
 
     Args:
         model (nn.Module): network model.
-        input_size (tuple): input size, e.g. (1, 3, 256, 128).
         verbose (bool, optional): shows detailed complexity of
             each module. Default is False.
         only_conv_linear (bool, optional): only considers convolution
@@ -316,11 +318,14 @@ def compute_model_complexity(
     default_train_mode = model.training
 
     model.eval().apply(_add_hooks)
-    input = torch.rand(input_size)
+    input_size = (1, 3, cfg.data.height, cfg.data.width)
+    input_img = torch.rand(input_size)
     if next(model.parameters()).is_cuda:
-        input = input.cuda()
-    model(input) # forward
-
+        input_img = input_img.cuda()
+    if isinstance(model, BPBreID):
+        model(input_img, torch.ones(1, cfg.model.bpbreid.masks.parts_num+1, 16, 8))  # forward
+    else:
+        model(input_img)  # forward
     for handle in registered_handles:
         handle.remove()
 

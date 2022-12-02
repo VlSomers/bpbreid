@@ -59,8 +59,7 @@ class VideoTripletEngine(ImageTripletEngine, VideoSoftmaxEngine):
         )
         engine.run(
             max_epoch=60,
-            save_dir='log/resnet50-triplet-mars',
-            print_freq=10
+            save_dir='log/resnet50-triplet-mars'
         )
     """
 
@@ -69,23 +68,27 @@ class VideoTripletEngine(ImageTripletEngine, VideoSoftmaxEngine):
         datamanager,
         model,
         optimizer,
+        writer,
         margin=0.3,
         weight_t=1,
         weight_x=1,
         scheduler=None,
         use_gpu=True,
         label_smooth=True,
-        pooling_method='avg'
+        pooling_method='avg',
+        save_model_flag=False
     ):
         super(VideoTripletEngine, self).__init__(
             datamanager,
             model,
             optimizer,
+            writer,
             margin=margin,
             weight_t=weight_t,
             weight_x=weight_x,
             scheduler=scheduler,
             use_gpu=use_gpu,
-            label_smooth=label_smooth
+            label_smooth=label_smooth,
+            save_model_flag=save_model_flag
         )
         self.pooling_method = pooling_method

@@ -54,8 +54,7 @@ class ImageTripletEngine(Engine):
         )
         engine.run(
             max_epoch=60,
-            save_dir='log/resnet50-triplet-market1501',
-            print_freq=10
+            save_dir='log/resnet50-triplet-market1501'
         )
     """
 
@@ -64,14 +63,17 @@ class ImageTripletEngine(Engine):
         datamanager,
         model,
         optimizer,
+        writer,
+        engine_state,
         margin=0.3,
         weight_t=1,
         weight_x=1,
         scheduler=None,
         use_gpu=True,
-        label_smooth=True
+        label_smooth=True,
+        save_model_flag=False
     ):
-        super(ImageTripletEngine, self).__init__(datamanager, use_gpu)
+        super(ImageTripletEngine, self).__init__(datamanager, writer, engine_state, use_gpu, save_model_flag)
 
         self.model = model
         self.optimizer = optimizer
@@ -83,8 +85,6 @@ class ImageTripletEngine(Engine):
 
         self.criterion_t = TripletLoss(margin=margin)
         self.criterion_x = CrossEntropyLoss(
-            num_classes=self.datamanager.num_train_pids,
-            use_gpu=self.use_gpu,
             label_smooth=label_smooth
         )
 
@@ -110,4 +110,4 @@ class ImageTripletEngine(Engine):
             'acc': metrics.accuracy(outputs, pids)[0].item()
         }
 
-        return loss_summary
+        return loss, {'glb_ft': loss_summary}

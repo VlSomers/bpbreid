@@ -1,21 +1,29 @@
 <!-- TODO
-- add badges (see StrongSORT repo): arxiv + paper with code + license 
-
-
 
 -->
 
-# BPBReID
+# BPBReID - Body Part-based Re-Identification
 **A strong baseline for body part-based person re-identification**
 
 [![arXiv](https://img.shields.io/badge/arXiv-2211.03679-<COLOR>.svg)](https://arxiv.org/abs/2211.03679) [![License: MIT](https://img.shields.io/badge/License-Apache-yellow.svg)](https://opensource.org/licenses/MIT) ![test](https://img.shields.io/static/v1?label=By&message=Pytorch&color=red)
-
 
 >**[Body Part-Based Representation Learning for Occluded Person Re-Identification, WACV23](https://arxiv.org/abs/2211.03679)**
 >
 >Vladimir Somers, Christophe De Vleeschouwer, Alexandre Alahi
 >
 >[*arxiv 2211.03679*](https://arxiv.org/abs/2211.03679)
+>
+### State-of-the-art performance on 5 datasets:
+
+Occluded-Duke: [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/body-part-based-representation-learning-for/person-re-identification-on-occluded-dukemtmc)](https://paperswithcode.com/sota/person-re-identification-on-occluded-dukemtmc?p=body-part-based-representation-learning-for)
+
+Occluded ReD: [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/body-part-based-representation-learning-for/person-re-identification-on-occluded-reid-1)](https://paperswithcode.com/sota/person-re-identification-on-occluded-reid-1?p=body-part-based-representation-learning-for)
+
+P-DukeMTMC: [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/body-part-based-representation-learning-for/person-re-identification-on-p-dukemtmc-reid)](https://paperswithcode.com/sota/person-re-identification-on-p-dukemtmc-reid?p=body-part-based-representation-learning-for)
+
+DukeMTMC-ReID: [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/body-part-based-representation-learning-for/person-re-identification-on-dukemtmc-reid)](https://paperswithcode.com/sota/person-re-identification-on-dukemtmc-reid?p=body-part-based-representation-learning-for)
+
+Market1501: [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/body-part-based-representation-learning-for/person-re-identification-on-market-1501)](https://paperswithcode.com/sota/person-re-identification-on-market-1501?p=body-part-based-representation-learning-for)
 
 ## News
 
@@ -106,7 +114,7 @@ Make sure [conda](https://www.anaconda.com/distribution/) is installed.
 
     # create conda environment
     cd bpbreid/ # enter project folder
-    conda create --name bpbreid python=3.7
+    conda create --name bpbreid python=3.10
     conda activate bpbreid
     
     # install dependencies
@@ -137,12 +145,13 @@ For instance, Market-1501 should look like this:
     │       └── query
     └── query
 
+Make also sure to set `data.root` config to your dataset root directory path, i.e., all your datasets folders (`Market-1501-v15.09.15`, `DukeMTMC-reID`, `Occluded_Duke`, `P-DukeMTMC-reID`, `Occluded_REID`) should be under this path.
 We plan to add automatic download of these labels in the future.
 We also plan to release the python script to generate these labels for any given dataset.
 
 ### Download the pre-trained models
 We also provide some [state-of-the-art pre-trained models](https://drive.google.com/drive/folders/1aUjpSXXVGtAh2nzV0RVsCq0tTXuDZWoH?usp=sharing) based on the HRNet-W32 backbone.
-You can specify the path to the pre-trained weights using the `model.load_weights` parameter in the `yaml` config.
+You can put the downloaded weights under a 'pretrained_models/' directory or specify the path to the pre-trained weights using the `model.load_weights` parameter in the `yaml` config.
 The configuration used to obtain the pre-trained weights is also saved within the `.pth` file: make sure to set `model.load_config` to `True` so that the parameters under the `model.bpbreid` part of the configuration tree will be loaded from this file.
 
 ### Inference

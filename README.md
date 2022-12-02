@@ -114,7 +114,7 @@ Make sure [conda](https://www.anaconda.com/distribution/) is installed.
 
     # create conda environment
     cd bpbreid/ # enter project folder
-    conda create --name bpbreid python=3.7
+    conda create --name bpbreid python=3.10
     conda activate bpbreid
     
     # install dependencies
@@ -145,12 +145,13 @@ For instance, Market-1501 should look like this:
     │       └── query
     └── query
 
+Make also sure to set `data.root` config to your dataset root directory path, i.e., all your datasets folders (`Market-1501-v15.09.15`, `DukeMTMC-reID`, `Occluded_Duke`, `P-DukeMTMC-reID`, `Occluded_REID`) should be under this path.
 We plan to add automatic download of these labels in the future.
 We also plan to release the python script to generate these labels for any given dataset.
 
 ### Download the pre-trained models
 We also provide some [state-of-the-art pre-trained models](https://drive.google.com/drive/folders/1aUjpSXXVGtAh2nzV0RVsCq0tTXuDZWoH?usp=sharing) based on the HRNet-W32 backbone.
-You can specify the path to the pre-trained weights using the `model.load_weights` parameter in the `yaml` config.
+You can put the downloaded weights under a 'pretrained_models/' directory or specify the path to the pre-trained weights using the `model.load_weights` parameter in the `yaml` config.
 The configuration used to obtain the pre-trained weights is also saved within the `.pth` file: make sure to set `model.load_config` to `True` so that the parameters under the `model.bpbreid` part of the configuration tree will be loaded from this file.
 
 ### Inference

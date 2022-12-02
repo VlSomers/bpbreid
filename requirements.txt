@@ -26,4 +26,4 @@ wandb
 neptune-client
 clearml
 monai
-torchmetrics
+torchmetrics==0.10.3

@@ -41,7 +41,7 @@ https://ecotrust-canada.github.io/markdown-toc/
 -->
 
 ## Table of content
-- [BPBReID](#bpbreid)
+- [BPBReID: Body Part-based Re-Identification](#bpbreid--body-part-based-re-identification)
   * [News](#news)
   * [What's next](#what-s-next)
   * [Table of content](#table-of-content)

@@ -27,7 +27,7 @@ Market1501: [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithco
 
 ## News
 
-- [2022.12.01] We release the first version of our codebase. Please update frequently as we will add more documentation during the next few weeks.
+- [2022.12.02] We release the first version of our codebase. Please update frequently as we will add more documentation during the next few weeks.
 
 ## What's next
 We plan on extending BPBReID in the near future, put a star and stay updated for future changes:

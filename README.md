@@ -2,10 +2,10 @@
 
 -->
 
-# BPBReID - Body Part-based Re-Identification
+# BPBReID: Body Part-based Re-Identification
 **A strong baseline for body part-based person re-identification**
 
-[![arXiv](https://img.shields.io/badge/arXiv-2211.03679-<COLOR>.svg)](https://arxiv.org/abs/2211.03679) [![License: MIT](https://img.shields.io/badge/License-Apache-yellow.svg)](https://opensource.org/licenses/MIT) ![test](https://img.shields.io/static/v1?label=By&message=Pytorch&color=red)
+[![arXiv](https://img.shields.io/badge/arXiv-2211.03679-<COLOR>.svg)](https://arxiv.org/abs/2211.03679) [![Hippocratic License HL3-LAW-MEDIA-MIL-SOC-SV](https://img.shields.io/static/v1?label=Hippocratic%20License&message=HL3-LAW-MEDIA-MIL-SOC-SV&labelColor=5e2751&color=bc8c3d)](https://firstdonoharm.dev/version/3/0/law-media-mil-soc-sv.html) ![test](https://img.shields.io/static/v1?label=By&message=Pytorch&color=red)
 
 >**[Body Part-Based Representation Learning for Occluded Person Re-Identification, WACV23](https://arxiv.org/abs/2211.03679)**
 >
@@ -27,7 +27,7 @@ Market1501: [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithco
 
 ## News
 
-- [2022.12.01] We release the first version of our codebase. Please update frequently as we will add more documentation during the next few weeks.
+- [2022.12.02] We release the first version of our codebase. Please update frequently as we will add more documentation during the next few weeks.
 
 ## What's next
 We plan on extending BPBReID in the near future, put a star and stay updated for future changes:
@@ -41,7 +41,7 @@ https://ecotrust-canada.github.io/markdown-toc/
 -->
 
 ## Table of content
-- [BPBReID](#bpbreid)
+- [BPBReID: Body Part-based Re-Identification](#bpbreid--body-part-based-re-identification)
   * [News](#news)
   * [What's next](#what-s-next)
   * [Table of content](#table-of-content)
@@ -90,7 +90,7 @@ Please refer to [our paper](https://arxiv.org/abs/2211.03679) for more informati
 ## What to find in this repository
 In this repository, we propose a framework and a strong baseline to support further research on part-based ReID methods.
 Our code is based on the popular [Torchreid](https://github.com/KaiyangZhou/deep-person-reid) framework for person re-identification.
-In this framework, we provide several adaptations to the original framework to support part-based ReID methods: 
+In this codebase, we provide several adaptations to the original framework to support part-based ReID methods: 
 - The [ImagePartBasedEngine](torchreid/engine/image/part_based_engine.py) to train/test part-based models, compute query-gallery distance matrix using multiple features per test sample with support for visibility scores.
 - The fully configurable [GiLt loss](/torchreid/losses/GiLt_loss.py) to selectively apply id/triplet loss on holistics (global) and part-based features.
 - The [BodyPartAttentionLoss](torchreid/losses/body_part_attention_loss.py) to train the attention mechanism.

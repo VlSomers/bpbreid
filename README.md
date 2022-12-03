@@ -90,7 +90,7 @@ Please refer to [our paper](https://arxiv.org/abs/2211.03679) for more informati
 ## What to find in this repository
 In this repository, we propose a framework and a strong baseline to support further research on part-based ReID methods.
 Our code is based on the popular [Torchreid](https://github.com/KaiyangZhou/deep-person-reid) framework for person re-identification.
-In this framework, we provide several adaptations to the original framework to support part-based ReID methods: 
+In this codebase, we provide several adaptations to the original framework to support part-based ReID methods: 
 - The [ImagePartBasedEngine](torchreid/engine/image/part_based_engine.py) to train/test part-based models, compute query-gallery distance matrix using multiple features per test sample with support for visibility scores.
 - The fully configurable [GiLt loss](/torchreid/losses/GiLt_loss.py) to selectively apply id/triplet loss on holistics (global) and part-based features.
 - The [BodyPartAttentionLoss](torchreid/losses/body_part_attention_loss.py) to train the attention mechanism.

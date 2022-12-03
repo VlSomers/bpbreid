@@ -3,7 +3,6 @@
 -->
 
 # BPBReID: Body Part-based Re-Identification
-![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white)
 
 **A strong baseline for body part-based person re-identification**
 

@@ -3,9 +3,11 @@
 -->
 
 # BPBReID: Body Part-based Re-Identification
+![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white)
+
 **A strong baseline for body part-based person re-identification**
 
-[![arXiv](https://img.shields.io/badge/arXiv-2211.03679-<COLOR>.svg)](https://arxiv.org/abs/2211.03679) [![Hippocratic License HL3-LAW-MEDIA-MIL-SOC-SV](https://img.shields.io/static/v1?label=Hippocratic%20License&message=HL3-LAW-MEDIA-MIL-SOC-SV&labelColor=5e2751&color=bc8c3d)](https://firstdonoharm.dev/version/3/0/law-media-mil-soc-sv.html) ![test](https://img.shields.io/static/v1?label=By&message=Pytorch&color=red)
+[![arXiv](https://img.shields.io/badge/arXiv-2211.03679-<COLOR>.svg)](https://arxiv.org/abs/2211.03679) [![Hippocratic License HL3-LAW-MEDIA-MIL-SOC-SV](https://img.shields.io/static/v1?label=Hippocratic%20License&message=HL3-LAW-MEDIA-MIL-SOC-SV&labelColor=5e2751&color=bc8c3d)](https://firstdonoharm.dev/version/3/0/law-media-mil-soc-sv.html)
 
 >**[Body Part-Based Representation Learning for Occluded Person Re-Identification, WACV23](https://arxiv.org/abs/2211.03679)**
 >

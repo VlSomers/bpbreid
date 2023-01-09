@@ -4,7 +4,9 @@
 
 # BPBReID: Body Part-based Re-Identification
 
-**A strong baseline for body part-based person re-identification**
+**A strong baseline for body part-based person re-identification** 
+
+[[Paper](https://arxiv.org/abs/2211.03679)] [[Video](https://www.youtube.com/watch?v=4NQump-vg_A&ab_channel=VladimirSomers)] [[Poster](docs/figures/bpbreid/wacv23_poster_bpbreid.pdf)]
 
 [![arXiv](https://img.shields.io/badge/arXiv-2211.03679-<COLOR>.svg)](https://arxiv.org/abs/2211.03679) [![Hippocratic License HL3-LAW-MEDIA-MIL-SOC-SV](https://img.shields.io/static/v1?label=Hippocratic%20License&message=HL3-LAW-MEDIA-MIL-SOC-SV&labelColor=5e2751&color=bc8c3d)](https://firstdonoharm.dev/version/3/0/law-media-mil-soc-sv.html)
 
@@ -14,6 +16,7 @@
 >
 >[*arxiv 2211.03679*](https://arxiv.org/abs/2211.03679)
 >
+
 ### State-of-the-art performance on 5 datasets:
 
 Occluded-Duke: [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/body-part-based-representation-learning-for/person-re-identification-on-occluded-dukemtmc)](https://paperswithcode.com/sota/person-re-identification-on-occluded-dukemtmc?p=body-part-based-representation-learning-for)

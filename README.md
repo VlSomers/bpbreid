@@ -2,7 +2,7 @@
 
 -->
 
-# BPBReID: Body Part-based Re-Identification
+# BPBReID: Body Part-based (Occluded) Re-Identification
 
 **A strong baseline for body part-based person re-identification** 
 

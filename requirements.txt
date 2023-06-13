@@ -27,3 +27,7 @@ neptune-client
 clearml
 monai
 torchmetrics==0.10.3
+
+# added for get_labels
+openpifpaf
+detectron2 @ git+https://github.com/facebookresearch/detectron2.git

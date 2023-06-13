@@ -419,7 +419,8 @@ class BatchMask:
 
         # Get the masks from the PifPaf predictions
         # mas = [result["instances"] for result in self.model(batch)]
-        masks = [result["instances"].pred_masks[0].cpu().numpy() for result in self.model(batch)]
+        masks = [result["instances"].pred_masks[0].cpu().numpy() for result in self.model(batch) if result["instances"].has("pred_masks") and len(result["instances"].pred_masks) > 0]
+
 
         # Load the PifPaf label arrays
         pifpaf_labels = [np.load(pifpaf_file_path) for pifpaf_file_path in pifpaf_file_paths]

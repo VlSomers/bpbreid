@@ -5,15 +5,15 @@ from pathlib import Path
 from typing import List
 
 import cv2
+import detectron2.data.transforms as T
 import numpy as np
 import openpifpaf
 import torch
 import tqdm
 from detectron2.checkpoint import DetectionCheckpointer
 from detectron2.config import CfgNode, get_cfg
-import detectron2.data.transforms as T
-from detectron2.modeling import build_model
 from detectron2.model_zoo import get_checkpoint_url, get_config_file
+from detectron2.modeling import build_model
 from detectron2.structures import Instances
 from torch.utils.data import DataLoader, Dataset
 
@@ -69,6 +69,25 @@ def get_image_paths(source, path_format=False):
     return image_paths
 
 
+def format_path(img_path, dataset_dir):
+    """
+    Formats the given image path based on the dataset directory.
+
+    Args:
+        img_path (str): The path of the image file.
+        dataset_dir (str): The directory path of the dataset.
+
+    Returns:
+        str: The formatted path of the image file.
+    """
+    if "occluded_reid" in dataset_dir.lower() or "occluded-reid" in dataset_dir.lower():
+        return os.path.join(os.path.basename(os.path.dirname(os.path.dirname(img_path))), os.path.basename(img_path))
+    elif "p-dukemtmc_reid" in dataset_dir.lower() or "p-dukemtmc-reid" in dataset_dir.lower():
+        return os.path.join(os.path.basename(os.path.dirname(os.path.dirname(os.path.dirname(img_path)))),
+                            os.path.basename(os.path.dirname(os.path.dirname(img_path))), os.path.basename(img_path))
+    return os.path.relpath(img_path, dataset_dir)
+
+
 def get_label_paths(is_mask, img_paths, dataset_dir):
     """
     Get the paths of label files corresponding to the image paths.
@@ -84,7 +103,7 @@ def get_label_paths(is_mask, img_paths, dataset_dir):
     """
     relative_paths, file_paths = [], []
     for img_name in img_paths:
-        relative_path = os.path.relpath(img_name, dataset_dir)
+        relative_path = format_path(img_name, dataset_dir)
         if not is_mask:
             file_path = os.path.join(dataset_dir, "masks", "pifpaf", relative_path + ".confidence_fields.npy")
         else:
@@ -397,6 +416,41 @@ class BatchMask:
 
         """
 
+        # Order the bounding boxes by distance from the center of the image(default)
+        def order_bbox(image_size, bbox_list, only_horizontal=False, only_vertical=False):
+            distances = []
+            image_height, image_width = image_size
+            center_x = image_width // 2
+            center_y = image_height // 2
+
+            for i, bbox in enumerate(bbox_list):
+                x1, y1, x2, y2 = bbox
+                bbox_center_x = (x1 + x2) // 2
+                bbox_center_y = (y1 + y2) // 2
+                distance = bbox_center_x if only_horizontal else bbox_center_y if only_vertical else np.sqrt(
+                    (bbox_center_x - center_x) ** 2 + (bbox_center_y - center_y) ** 2)
+                distances.append((i, distance))
+            distances = sorted(distances, key=lambda x: x[1])
+            return distances
+
+        # Filter segmentations masks based on class and distance from the center of the image
+        def filter_masks(results):
+            image_size = results[0]["instances"].image_size
+            pred_boxes, scores, pred_classes, pred_masks = results[0]["instances"].get_fields().values()
+            if len(pred_masks) == 0:
+                raise Exception("Error: Pifpaf model did not return any masks!")
+
+            # Filter out all masks that are not person
+            filtered_boxes, filtered_masks = zip(
+                *[(box.cpu().numpy(), mask.cpu().numpy()) for box, mask, cls in
+                  zip(pred_boxes, pred_masks, pred_classes) if cls == 0])
+
+            # Order the masks by bbox distance to the center of the image
+            distances = order_bbox(image_size, filtered_boxes)
+            filtered_masks = [filtered_masks[i] for i, _ in distances]
+
+            return filtered_masks
+
         # Filter PifPaf array using segmentation mask
         def filter_pifpaf_with_mask(pifpaf_array, mask, is_resize_pifpaf=False, interpolation=cv2.INTER_CUBIC):
             if is_resize_pifpaf:
@@ -418,9 +472,7 @@ class BatchMask:
             return filtered_pifpaf
 
         # Get the masks from the PifPaf predictions
-        # mas = [result["instances"] for result in self.model(batch)]
-        masks = [result["instances"].pred_masks[0].cpu().numpy() for result in self.model(batch) if result["instances"].has("pred_masks") and len(result["instances"].pred_masks) > 0]
-
+        masks = filter_masks(self.model(batch))
 
         # Load the PifPaf label arrays
         pifpaf_labels = [np.load(pifpaf_file_path) for pifpaf_file_path in pifpaf_file_paths]

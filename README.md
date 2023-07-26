@@ -153,6 +153,17 @@ Make also sure to set `data.root` config to your dataset root directory path, i.
 We plan to add automatic download of these labels in the future.
 We also plan to release the python script to generate these labels for any given dataset.
 
+
+### Generate human parsing labels
+
+You can create human parsing labels for your own dataset using the following command:
+
+    conda activate bpbreid
+    python scripts/get_labels --source [Dataset Path] 
+
+The labels will be saved under the source directory in the *masks* folder as per the code convention.
+
+
 ### Download the pre-trained models
 We also provide some [state-of-the-art pre-trained models](https://drive.google.com/drive/folders/1aUjpSXXVGtAh2nzV0RVsCq0tTXuDZWoH?usp=sharing) based on the HRNet-W32 backbone.
 You can put the downloaded weights under a 'pretrained_models/' directory or specify the path to the pre-trained weights using the `model.load_weights` parameter in the `yaml` config.

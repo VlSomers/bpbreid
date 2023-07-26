@@ -19,7 +19,7 @@ class OccludedReID(ImageDataset):
 
     masks_dirs = {
         # dir_name: (parts_num, masks_stack_size, contains_background_mask)
-        'pifpaf': (36, False, '.jpg.confidence_fields.npy'),
+        'pifpaf': (36, False, '.tif.confidence_fields.npy'),
         'pifpaf_maskrcnn_filtering': (36, False, '.npy'),
     }
 

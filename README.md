@@ -30,7 +30,8 @@ DukeMTMC-ReID: [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswit
 Market1501: [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/body-part-based-representation-learning-for/person-re-identification-on-market-1501)](https://paperswithcode.com/sota/person-re-identification-on-market-1501?p=body-part-based-representation-learning-for)
 
 ## News
-- [2023.06.28] Please find a non-official script to generate human parsing labels from PifPaf and MaskRCNN in this [Pull Request](https://github.com/VlSomers/bpbreid/pull/18). The PR will be merged soon. This script is different from the one used by the authors (especially when facing multiple pedestrians in a single image): resulting human parsing labels will not be exactly the same.
+- [2023.07.26] The Python script from @samihormi to generate human parsing labels based on PifPaf and MaskRCNN has been released, have a look at the "Generate human parsing labels" section below. This script is different from the one used by the authors (especially when facing multiple pedestrians in a single image): resulting human parsing labels will not be exactly the same.
+- [2023.06.28] Please find a non-official script to generate human parsing labels from PifPaf and MaskRCNN in this [Pull Request](https://github.com/VlSomers/bpbreid/pull/18). The PR will be merged soon.
 - [2022.12.02] We release the first version of our codebase. Please update frequently as we will add more documentation during the next few weeks.
 
 ## What's next

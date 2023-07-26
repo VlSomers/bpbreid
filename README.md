@@ -54,6 +54,7 @@ https://ecotrust-canada.github.io/markdown-toc/
   * [Instructions](#instructions)
     + [Installation](#installation)
     + [Download human parsing labels](#download-human-parsing-labels)
+    + [Generate human parsing labels](#generate-human-parsing-labels)
     + [Download the pre-trained models](#download-the-pre-trained-models)
     + [Inference](#inference)
     + [Training](#training)

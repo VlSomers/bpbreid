@@ -29,6 +29,10 @@ DukeMTMC-ReID: [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswit
 
 Market1501: [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/body-part-based-representation-learning-for/person-re-identification-on-market-1501)](https://paperswithcode.com/sota/person-re-identification-on-market-1501?p=body-part-based-representation-learning-for)
 
+&nbsp;
+<p align="center"><img src="/docs/figures/bpbreid/part_based_reid_methods.png" width="860"></p>
+&nbsp;
+
 ## News
 - [2023.07.26] The Python script from @samihormi to generate human parsing labels based on PifPaf and MaskRCNN has been released, have a look at the "Generate human parsing labels" section below. This script is different from the one used by the authors (especially when facing multiple pedestrians in a single image): resulting human parsing labels will not be exactly the same.
 - [2023.06.28] Please find a non-official script to generate human parsing labels from PifPaf and MaskRCNN in this [Pull Request](https://github.com/VlSomers/bpbreid/pull/18). The PR will be merged soon.
@@ -79,9 +83,6 @@ At test time, no human parsing labels is required.
 The final similarity score between two samples is computed using the average distance of all mutually visible part-based embeddings.
 Please refer to [our paper](https://arxiv.org/abs/2211.03679) for more information.
 
-&nbsp;
-<p align="center"><img src="/docs/figures/bpbreid/part_based_reid_methods.png" width="860"></p>
-&nbsp;
 
 <!--
 &nbsp;

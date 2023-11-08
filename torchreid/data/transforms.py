@@ -157,7 +157,7 @@ def build_transforms(
     transform_tr += [ResizeMasks(height, width, mask_scale)]
     transform_te += [ResizeMasks(height, width, mask_scale)]
 
-    transform_tr = Compose(transform_tr)
-    transform_te = Compose(transform_te)
+    transform_tr = Compose(transform_tr, is_check_shapes=False)
+    transform_te = Compose(transform_te, is_check_shapes=False)
 
     return transform_tr, transform_te

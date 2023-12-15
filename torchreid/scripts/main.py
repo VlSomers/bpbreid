@@ -3,14 +3,14 @@ import argparse
 import torch
 import torch.nn as nn
 import torchreid
-from tools.extract_part_based_features import extract_reid_features
+from torchreid.tools.extract_part_based_features import extract_reid_features
 from torchreid.data.masks_transforms import compute_parts_num_and_names
 from torchreid.utils import (
     Logger, check_isfile, set_random_seed, collect_env_info,
     resume_from_checkpoint, load_pretrained_weights, compute_model_complexity, Writer, load_checkpoint
 )
 
-from scripts.default_config import (
+from torchreid.scripts.default_config import (
     imagedata_kwargs, optimizer_kwargs, videodata_kwargs, engine_run_kwargs,
     get_default_config, lr_scheduler_kwargs, display_config_diff
 )
@@ -189,10 +189,12 @@ def main():
         extract_reid_features(cfg, cfg.inference.input_folder, cfg.data.save_dir, model)
 
 
-def build_config(args=None, config_file=None):
+def build_config(args=None, config_file=None, config=None):
     cfg = get_default_config()
     default_cfg_copy = cfg.clone()
     cfg.use_gpu = torch.cuda.is_available()
+    if config:
+        cfg.merge_from_other_cfg(config)
     if config_file:
         cfg.merge_from_file(config_file)
         cfg.project.config_file = os.path.basename(config_file)

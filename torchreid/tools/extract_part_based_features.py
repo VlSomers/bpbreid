@@ -3,8 +3,8 @@ import tqdm
 import glob
 import os
 import numpy as np
-from scripts.default_config import get_default_config, display_config_diff
-from tools.feature_extractor import FeatureExtractor
+from torchreid.scripts.default_config import get_default_config, display_config_diff
+from torchreid.tools.feature_extractor import FeatureExtractor
 
 
 def extract_part_based_features(extractor, image_list, batch_size=400):

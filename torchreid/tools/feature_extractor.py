@@ -105,10 +105,10 @@ class FeatureExtractor(object):
                                          transforms=None,
                                          norm_mean=pixel_mean,
                                          norm_std=pixel_std,
-                                         masks_preprocess=cfg.data.masks.preprocess,
-                                         softmax_weight=cfg.data.masks.softmax_weight,
-                                         background_computation_strategy=cfg.data.masks.background_computation_strategy,
-                                         mask_filtering_threshold=cfg.data.masks.mask_filtering_threshold,
+                                         masks_preprocess=cfg.model.bpbreid.masks.preprocess,
+                                         softmax_weight=cfg.model.bpbreid.masks.softmax_weight,
+                                         background_computation_strategy=cfg.model.bpbreid.masks.background_computation_strategy,
+                                         mask_filtering_threshold=cfg.model.bpbreid.masks.mask_filtering_threshold,
                                          )
 
         to_pil = T.ToPILImage()
@@ -145,12 +145,14 @@ class FeatureExtractor(object):
                 transf_args['image'] = np.array(image)
                 result = self.preprocess(**transf_args)
                 images.append(result['image'])
-                masks.append(result['mask'])
+                if external_parts_masks is not None:
+                    masks.append(result['mask'])
 
             images = torch.stack(images, dim=0)
-            masks = torch.stack(masks, dim=0)
             images = images.to(self.device)
-            masks = masks.to(self.device)
+            if external_parts_masks is not None:
+                masks = torch.stack(masks, dim=0)
+                masks = masks.to(self.device)
 
         elif isinstance(input, str):
             image = Image.open(input).convert('RGB')

@@ -33,10 +33,6 @@ def get_requirements(filename='requirements.txt'):
         requires = [line.replace('\n', '') for line in f.readlines()]
     return requires
 
-import torch
-print("hello world", torch.__version__)
-
-
 setup(
     description='A library for deep learning person re-ID in PyTorch',
     license='MIT',

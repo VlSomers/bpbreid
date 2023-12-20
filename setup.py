@@ -39,6 +39,7 @@ setup(
     long_description=readme(),
     packages=find_packages(),
     install_requires=get_requirements(),
+    extras_require={"labels": get_requirements("requirements_labels.txt")},
     keywords=['Person Re-Identification', 'Deep Learning', 'Computer Vision'],
     ext_modules=cythonize(ext_modules)
 )

@@ -2,7 +2,7 @@
 name = "torchreid"
 authors = [{name="Vladimir Somers"}, {name="Kaiyang Zhou"}]
 urls = {homepage = "https://github.com/VlSomers/bpbreid"}
-dynamic = ["version", "description", "license", "dependencies", "keywords", "readme"]
+dynamic = ["version", "description", "license", "dependencies", "keywords", "readme", "optional-dependencies"]
 
 [tool.setuptools.dynamic]
 version = {attr = "torchreid.__version__"}

@@ -1,0 +1,12 @@
+[project]
+name = "torchreid"
+authors = [{name="Vladimir Somers"}, {name="Kaiyang Zhou"}]
+urls = {homepage = "https://github.com/VlSomers/bpbreid"}
+dynamic = ["version", "description", "license", "dependencies", "keywords", "readme", "optional-dependencies"]
+
+[tool.setuptools.dynamic]
+version = {attr = "torchreid.__version__"}
+
+[build-system]
+requires = ["setuptools", "numpy", "cython"]
+build-backend = "setuptools.build_meta"

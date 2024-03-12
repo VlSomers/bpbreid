@@ -123,7 +123,8 @@ def _compute_distance_matrix_using_bp_features(qf, gf, dist_combine_strat, batch
     pairwise_dist = torch.cat(pairwise_dist_, 1)
     body_part_pairwise_dist = torch.cat(body_part_pairwise_dist_, 2)
 
-    Writer.current_writer().qg_pairwise_dist_statistics(pairwise_dist, body_part_pairwise_dist, None, None)
+    if Writer.current_writer() is not None:
+        Writer.current_writer().qg_pairwise_dist_statistics(pairwise_dist, body_part_pairwise_dist, None, None)
 
     return pairwise_dist, body_part_pairwise_dist
 
@@ -166,7 +167,8 @@ def _compute_distance_matrix_using_bp_features_and_masks(qf, gf, qf_parts_visibi
     pairwise_dist = torch.cat(pairwise_dist_, 1)
     body_part_pairwise_dist = torch.cat(body_part_pairwise_dist_, 2)
 
-    Writer.current_writer().qg_pairwise_dist_statistics(pairwise_dist, body_part_pairwise_dist, qf_parts_visibility_cpu, gf_parts_visibility)
+    if Writer.current_writer() is not None:
+        Writer.current_writer().qg_pairwise_dist_statistics(pairwise_dist, body_part_pairwise_dist, qf_parts_visibility_cpu, gf_parts_visibility)
 
     max_value = body_part_pairwise_dist.max() + 1 # FIXME not clean with cosine dist
     valid_pairwise_dist_mask = (pairwise_dist != float(-1))

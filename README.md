@@ -154,8 +154,6 @@ For instance, Market-1501 should look like this:
     └── query
 
 Make also sure to set `data.root` config to your dataset root directory path, i.e., all your datasets folders (`Market-1501-v15.09.15`, `DukeMTMC-reID`, `Occluded_Duke`, `P-DukeMTMC-reID`, `Occluded_REID`) should be under this path.
-We plan to add automatic download of these labels in the future.
-We also plan to release the python script to generate these labels for any given dataset.
 
 
 ### Generate human parsing labels

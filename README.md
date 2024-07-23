@@ -236,7 +236,6 @@ If you use this repository for your research or wish to refer to our method [BPB
     author = {Somers, Vladimir and {De Vleeschouwer}, Christophe and Alahi, Alexandre},
     doi = {10.48550/arxiv.2211.03679},
     eprint = {2211.03679},
-    file = {:Users/vladimirsomers/Library/CloudStorage/OneDrive-SportradarAG/PhD/Scientific Literature/Mendeley/Somers, De Vleeschouwer, Alahi_2023_Body Part-Based Representation Learning for Occluded Person Re-Identification.pdf:pdf},
     isbn = {2211.03679v1},
     journal = {Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV23)},
     month = {nov},

@@ -6,7 +6,7 @@
 
 **A strong baseline for body part-based person re-identification** 
 
-🔥 Our new work on [Keypoint Promptable ReID](https://github.com/VlSomers/keypoint_promptable_reidentification) was accepted to ECCV24 🔥
+🔥 *Our new work on [Keypoint Promptable ReID](https://github.com/VlSomers/keypoint_promptable_reidentification) was accepted at ECCV24 * 🔥
 
 [[Paper](https://arxiv.org/abs/2211.03679)] [[Video](https://www.youtube.com/watch?v=4NQump-vg_A&ab_channel=VladimirSomers)] [[Poster](docs/figures/bpbreid/wacv23_poster_bpbreid.pdf)]
 

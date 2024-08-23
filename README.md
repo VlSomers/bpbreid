@@ -34,6 +34,7 @@ Market1501: [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithco
 &nbsp;
 
 ## News
+- [2024.08.23] 🚀🔥 Our new work on [Keypoint Promptable ReID](https://arxiv.org/abs/2407.18112) was accepted to ECCV24, full codebase available [here](https://github.com/VlSomers/keypoint_promptable_reidentification).
 - [2023.09.20] New paper and big update coming soon 🚀 ...
 - [2023.07.26] The Python script from @samihormi to generate human parsing labels based on PifPaf and MaskRCNN has been released, have a look at the "Generate human parsing labels" section below. This script is different from the one used by the authors (especially when facing multiple pedestrians in a single image): resulting human parsing labels will not be exactly the same.
 - [2023.06.28] Please find a non-official script to generate human parsing labels from PifPaf and MaskRCNN in this [Pull Request](https://github.com/VlSomers/bpbreid/pull/18). The PR will be merged soon.

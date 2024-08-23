@@ -6,6 +6,8 @@
 
 **A strong baseline for body part-based person re-identification** 
 
+🔥 Our new work on [Keypoint Promptable ReID](https://github.com/VlSomers/keypoint_promptable_reidentification) was accepted to ECCV24 🔥
+
 [[Paper](https://arxiv.org/abs/2211.03679)] [[Video](https://www.youtube.com/watch?v=4NQump-vg_A&ab_channel=VladimirSomers)] [[Poster](docs/figures/bpbreid/wacv23_poster_bpbreid.pdf)]
 
 [![arXiv](https://img.shields.io/badge/arXiv-2211.03679-<COLOR>.svg)](https://arxiv.org/abs/2211.03679) [![Hippocratic License HL3-LAW-MEDIA-MIL-SOC-SV](https://img.shields.io/static/v1?label=Hippocratic%20License&message=HL3-LAW-MEDIA-MIL-SOC-SV&labelColor=5e2751&color=bc8c3d)](https://firstdonoharm.dev/version/3/0/law-media-mil-soc-sv.html)

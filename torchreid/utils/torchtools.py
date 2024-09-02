@@ -12,7 +12,6 @@ import torch.nn as nn
 
 from .tools import mkdir_if_missing
 import collections
-from torch._six import string_classes
 import re
 
 __all__ = [
@@ -390,7 +389,7 @@ def collate(batch):
         return torch.tensor(batch, dtype=torch.float64).numpy()
     elif isinstance(elem, int):
         return torch.tensor(batch).numpy()
-    elif isinstance(elem, string_classes):
+    elif isinstance(elem, str):
         return batch
     elif isinstance(elem, collections.abc.Mapping):
         try:

@@ -217,6 +217,7 @@ If you need more information about the visualization tool, fell free to open an 
 
 ## Other works
 If you are looking for datasets to evaluate your re-identification models, please have a look at our other works on player re-identification for team sport events:
+- [CAMELTrack: Context-Aware Multi-cue ExpLoitation for Online Multi-Object Tracking](https://github.com/TrackingLaboratory/CAMELTrack)
 - The [SoccerNet Player Re-Identification](https://github.com/SoccerNet/sn-reid) dataset
 - The [DeepSportRadar Player Re-Identification](https://github.com/DeepSportRadar/player-reidentification-challenge) dataset 
 

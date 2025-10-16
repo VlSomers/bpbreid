@@ -36,6 +36,7 @@ Market1501: [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithco
 &nbsp;
 
 ## News
+- [2025.10.25] Added a discussion on the Theoretical Limitations of Global Embeddings in ReID Under Partial Observations
 - [2024.08.23] 🚀🔥 Our new work on [Keypoint Promptable ReID](https://arxiv.org/abs/2407.18112) was accepted to ECCV24, full codebase available [here](https://github.com/VlSomers/keypoint_promptable_reidentification).
 - [2023.09.20] New paper and big update coming soon 🚀 ...
 - [2023.07.26] The Python script from @samihormi to generate human parsing labels based on PifPaf and MaskRCNN has been released, have a look at the "Generate human parsing labels" section below. This script is different from the one used by the authors (especially when facing multiple pedestrians in a single image): resulting human parsing labels will not be exactly the same.
@@ -60,6 +61,7 @@ https://ecotrust-canada.github.io/markdown-toc/
   * [Table of content](#table-of-content)
   * [Introduction](#introduction)
   * [What to find in this repository](#what-to-find-in-this-repository)
+  * [Discussion on the Theoretical Limitations of Global Embeddings in ReID Under Partial Observations](#discussion-on-the-theoretical-limitations-of-global-embeddings-in-reid-under-partial-observationsRetry)
   * [Instructions](#instructions)
     + [Installation](#installation)
     + [Download human parsing labels](#download-human-parsing-labels)
@@ -114,6 +116,21 @@ In this codebase, we provide several adaptations to the original framework to su
 
 You can also have a look at the original [Torchreid README](Torchreid_original_README.rst) for additional information, such as documentation, how-to instructions, etc.
 Be aware that some of the original Torchreid functionnality and models might be broken (for example, we don't support video re-id yet).
+
+
+## Discussion on the Theoretical Limitations of Global Embeddings in ReID Under Partial Observations (Occlusions) 
+Current ReID models aim to learn a single global embedding where images of the same person cluster together. 
+However, this paradigm faces an inherent paradox when dealing with partial observations. 
+Consider three images of the same person: a full-body image (A) and two occluded variations - an upper-body-only image (B) and a lower-body-only image (C).
+This becomes particularly problematic when comparing B with C - they share no common visible features despite representing the same person. 
+The global embedding approach implicitly assumes transitivity (if A=B and B=C, then A=C), but this property breaks down under partial observations, revealing a fundamental flaw in the single embedding space paradigm.
+This observation suggests that the traditional approach of mapping all images to a unified embedding space may be fundamentally flawed. ReID models do not learn truly identity-centric representations, but rather appearance-centric representations that serve as a proxy to model identity. These appearance-centric representations are learned to be invariant to pose, lighting, and viewpoint changes, but when faced with partial observations, expecting such models to produce consistent embeddings becomes theoretically questionable.
+This theoretical limitation is reflected in practice, where part-based representation learning, which compares only mutually visible regions, offer a more principled solution to this ambiguity.
+Rather than being a technical hack to improve image retrieval performance, they may represent a fundamental requirement for representation learning under partial observation constraints.
+Nevertheless, this apparent limitation of deep metric learning deserves further investigation. We identify two promising research directions. First, developing generic part-based architectures for representation learning that extend beyond human ReID and dynamically align comparable features while discarding missing information across object pairs. Such generic part-based methods would learn to build representations under partial observability without priors on the input object type, making them truly universal solutions. 
+Second, moving beyond representation learning entirely by designing ReID models that directly process image pairs to compute similarity scores, thus avoiding the ambiguity of intermediate representation in an embedding space under partial observations. 
+In this paradigm, the network would inherently learn to compare only mutually visible parts of the input image pair.
+This approach faces however two key limitations compared to the first one: the need to run the neural network for every possible image pair, leading to quadratic computational complexity with gallery size (versus running the network once per image in representation learning), and the challenge of quantifying the confidence in the output similarity score when comparing partially visible objects.
 
 
 ## Instructions
